@@ -19,14 +19,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>My Tebex Shop</h1>
+        <h1>CoreForge</h1>
         <p style="text-align: center;">Products from <a href="https://coreforge-shop.tebex.io" target="_blank">coreforge-shop.tebex.io</a></p>
         <button onclick="loadPackages()">Refresh Products</button>
         <div id="packages" class="loading">Loading products...</div>
     </div>
 
     <script>
-        const storeIdentifier = 'YOUR_STORE_IDENTIFIER'; // Replace with your Tebex store identifier (e.g., 'mystoreshop')
+        const storeIdentifier = 'coreforge-shop'; // Replace with your Tebex store identifier (e.g., 'mystoreshop')
         const apiUrl = `https://plugin.tebex.io/webstore/${storeIdentifier}/packages`;
 
         async function loadPackages() {
