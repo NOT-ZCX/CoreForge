@@ -1,55 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment - ForeForge</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 50px auto;
-      padding: 20px;
-      text-align: center;
-      background-color: #f4f4f4;
-    }
-    .payment-button {
-      background-color: #28a745;
-      color: white;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 5px;
-      font-size: 18px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 20px;
-    }
-    .payment-button:hover {
-      background-color: #218838;
-    }
-    iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-      margin-top: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tebex Shop</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        .package { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .package h3 { margin: 0; color: #007bff; }
+        .price { font-weight: bold; color: #28a745; }
+        button { display: block; margin: 20px auto; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .loading { text-align: center; color: #666; }
+        .error { color: red; text-align: center; }
+    </style>
 </head>
 <body>
-  <h1>Purchase ForeForge Access</h1>
-  <p>Secure payment for $10. Choose your payment method on Sellix.</p>
+    <div class="container">
+        <h1>My Tebex Shop</h1>
+        <p style="text-align: center;">Products from <a href="https://YOUR_STORE_IDENTIFIER.tebex.io" target="_blank">YOUR_STORE_IDENTIFIER.tebex.io</a></p>
+        <button onclick="loadPackages()">Refresh Products</button>
+        <div id="packages" class="loading">Loading products...</div>
+    </div>
 
-  <!-- Option 1: Simple redirect button -->
-  <a href="https://sellix.io/product/your-payment-link-here" class="payment-button" target="_blank">
-    Pay $10 Now
-  </a>
+    <script>
+        const storeIdentifier = 'YOUR_STORE_IDENTIFIER'; // Replace with your Tebex store identifier (e.g., 'mystoreshop')
+        const apiUrl = `https://plugin.tebex.io/webstore/${storeIdentifier}/packages`;
 
-  <!-- Option 2: Embedded iframe for seamless experience (if Sellix supports it; check their docs) -->
-  <!-- <iframe src="https://sellix.io/embed/product/your-link-here"></iframe> -->
+        async function loadPackages() {
+            const packagesDiv = document.getElementById('packages');
+            packagesDiv.innerHTML = '<div class="loading">Loading products...</div>';
 
-  <p style="margin-top: 20px; font-size: 14px; color: #666;">
-    After payment, you'll receive instant access. Supported: Cards, PayPal, Crypto.
-  </p>
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Store not found or API error.');
+                
+                const data = await response.json();
+                if (!data.packages || data.packages.length === 0) {
+                    packagesDiv.innerHTML = '<p>No products available.</p>';
+                    return;
+                }
+
+                let html = '';
+                data.packages.forEach(pkg => {
+                    const price = pkg.price ? `$${pkg.price}` : 'Free';
+                    const description = pkg.description || 'No description available.';
+                    html += `
+                        <div class="package">
+                            <h3>${pkg.name}</h3>
+                            <p class="price">${price}</p>
+                            <p>${description}</p>
+                            <a href="https://plugin.tebex.io/package/${pkg.id}" target="_blank">Buy Now</a>
+                        </div>
+                    `;
+                });
+                packagesDiv.innerHTML = html;
+            } catch (error) {
+                packagesDiv.innerHTML = `<div class="error">Error loading products: ${error.message}</div>`;
+            }
+        }
+
+        // Load packages on page load
+        window.onload = loadPackages;
+    </script>
 </body>
 </html>
