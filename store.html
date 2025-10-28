@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment - ForeForge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+    .payment-button {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    .payment-button:hover {
+      background-color: #218838;
+    }
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Purchase ForeForge Access</h1>
+  <p>Secure payment for $10. Choose your payment method on Sellix.</p>
+
+  <!-- Option 1: Simple redirect button -->
+  <a href="https://sellix.io/product/your-payment-link-here" class="payment-button" target="_blank">
+    Pay $10 Now
+  </a>
+
+  <!-- Option 2: Embedded iframe for seamless experience (if Sellix supports it; check their docs) -->
+  <!-- <iframe src="https://sellix.io/embed/product/your-link-here"></iframe> -->
+
+  <p style="margin-top: 20px; font-size: 14px; color: #666;">
+    After payment, you'll receive instant access. Supported: Cards, PayPal, Crypto.
+  </p>
+</body>
+</html>
