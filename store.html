@@ -1,175 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoreForge Store</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .category {
-            flex: 1 1 300px;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .packages {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .package {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .package img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-        .price {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #007bff;
-        }
-        .buy-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .buy-btn:hover {
-            background-color: #218838;
-        }
-        .loading {
-            text-align: center;
-            font-size: 1.2em;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoreForge - Invite Bot</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="header">
-        <h1>CoreForge Store</h1>
-        <p>Welcome to the official CoreForge shop! Browse and purchase our digital products.</p>
-    </div>
-    <div class="container">
-        <div id="categories" class="categories"></div>
-        <div id="packages" class="packages"></div>
-    </div>
-
-    <script>
-        const tebexId = '1692860';
-        const publicToken = '10a7w-61ee2027186ce22e356f3ea9185eab559a7b27cb';
-        const apiBase = 'https://headless.tebex.io/api/accounts';
-
-        async function fetchData(endpoint) {
-            const response = await fetch(`${apiBase}/${tebexId}/${endpoint}?token=${publicToken}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return await response.json();
-        }
-
-        async function loadStore() {
-            try {
-                // Load categories
-                const categoriesData = await fetchData('categories');
-                const categoriesContainer = document.getElementById('categories');
-                categoriesContainer.innerHTML = '<h2>Categories</h2>';
-                
-                categoriesData.data.forEach(category => {
-                    const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'category';
-                    categoryDiv.innerHTML = `
-                        <h3>${category.name}</h3>
-                        <p>${category.description || 'No description available'}</p>
-                    `;
-                    categoriesContainer.appendChild(categoryDiv);
-                });
-
-                // Load packages
-                const packagesData = await fetchData('packages');
-                const packagesContainer = document.getElementById('packages');
-                packagesContainer.innerHTML = '<h2>Packages</h2>';
-                
-                packagesData.data.forEach(pkg => {
-                    const packageDiv = document.createElement('div');
-                    packageDiv.className = 'package';
-                    packageDiv.innerHTML = `
-                        <h3>${pkg.name}</h3>
-                        <img src="${pkg.image || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${pkg.name}">
-                        <p>${pkg.description || 'No description available'}</p>
-                        <div class="price">$${pkg.price}</div>
-                        <button class="buy-btn" onclick="buyPackage(${pkg.id})">Buy Now</button>
-                    `;
-                    packagesContainer.appendChild(packageDiv);
-                });
-            } catch (error) {
-                console.error('Error loading store:', error);
-                document.querySelector('.container').innerHTML = '<p class="loading">Error loading store. Please try again later.</p>';
-            }
-        }
-
-        async function buyPackage(packageId) {
-            try {
-                // Create a basket and add the package
-                const basketResponse = await fetch(`${apiBase}/${tebexId}/baskets`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Tebex-Token': publicToken
-                    },
-                    body: JSON.stringify({
-                        packages: [{ id: packageId, quantity: 1 }]
-                    })
-                });
-                
-                if (!basketResponse.ok) {
-                    throw new Error(`HTTP error! status: ${basketResponse.status}`);
-                }
-                
-                const basketData = await basketResponse.json();
-                
-                // Redirect to checkout
-                window.location.href = basketData.data.checkout_url;
-            } catch (error) {
-                console.error('Error buying package:', error);
-                alert('Error processing purchase. Please try again.');
-            }
-        }
-
-        // Load the store on page load
-        loadStore();
-    </script>
+  <h1>CoreForge Store</h1>
+  <div class="container">
+    <p>To open the store press the button below:</p>
+    <button onclick="window.open('https://coreforge-shop.tebex.io/', '_blank')">Open Store Page</button>
+  </div>
+  <div class="bottom-button-container">
+    <button onclick="location.href='index.html'">Back to Home</button>
+  </div>
 </body>
 </html>
