@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CoreForge — System Status</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: radial-gradient(1000px at 80% 10%, #161616 0%, #0b0b0b 70%);
+            --card: #141414;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f5f5f5;
+            --muted: #a0a0a0;
+            --accent: #ffffff;
+            --accent-soft: #d6d6d6;
+            --good: #22c55e;
+            --warn: #facc15;
+            --bad: #ef4444;
+            --radius: 16px;
+            --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.6);
+            --transition: all 0.3s ease;
+
+            font-family: "Inter", sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", sans-serif;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            padding: 22px 8%;
+            background: rgba(0, 0, 0, 0.55);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 14px 8%;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: var(--muted);
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--muted);
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta {
+            background: var(--accent);
+            color: #000;
+            padding: 10px 22px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .cta:hover {
+            background: #e1e1e1;
+            transform: translateY(-1px);
+        }
+
+        .hero {
+            padding: 160px 8% 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.4rem;
+            font-weight: 800;
+        }
+
+        .hero span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: 20px auto;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .status-summary {
+            margin: 60px auto;
+            padding: 22px 28px;
+            border-radius: var(--radius);
+            background: var(--card);
+            border: 1px solid var(--border);
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .summary-left h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .summary-left p {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .summary-badge {
+            padding: 8px 18px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            border: 1px solid var(--border);
+        }
+
+        .summary-badge.up {
+            color: var(--good);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .summary-badge.down {
+            color: var(--bad);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .status-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 26px;
+        }
+
+        .status-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 24px 22px;
+            transition: var(--transition);
+        }
+
+        .status-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .ping {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .uptime-bar {
+            margin-top: 12px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .uptime-fill {
+            height: 100%;
+            background: var(--accent);
+            transform-origin: left;
+            transform: scaleX(1);
+            transition: transform 0.3s ease;
+        }
+
+        .incidents {
+            max-width: 1100px;
+            margin: 80px auto 40px;
+        }
+
+        .incidents h2 {
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .incident-card {
+            background: var(--card);
+            padding: 18px 22px;
+            border-radius: var(--radius);
+            border: 1px solid var(--bad);
+            margin-bottom: 20px;
+        }
+
+        .incident-card.resolved {
+            border-color: var(--good);
+        }
+
+        .incident-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .incident-desc {
+            color: var(--muted);
+            margin-top: 4px;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background: #050505;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            padding: 80px 8% 40px;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 60px;
+            margin-bottom: 50px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .footer-brand h3 span {
+            color: var(--muted);
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 80px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links h4 {
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--muted);
+            font-size: 0.95rem;
+            text-decoration: none;
+            margin: 6px 0;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding-top: 25px;
+            font-size: 0.9rem;
+            color: var(--muted);
+            gap: 10px;
+        }
+
+        .footer-bottom span {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .link {
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .link:hover {
+            color: #9ca3af;
+            border-bottom-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .9s ease, transform .9s ease
+        }
+
+        .visible {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        @media(max-width:700px) {
+            .footer-container {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.6rem;
+            }
+
+            .navbar nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">Core<span>Forge</span></div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="#">Status</a>
+        </nav>
+
+        <a href="https://discord.gg/coreforge" class="cta">Add to Discord</a>
+    </header>
+
+    <section class="hero">
+        <h1>System <span>Status</span></h1>
+        <p>Live monitoring of CoreForge systems, uptime tracking, and service incidents.</p>
+    </section>
+
+    <div class="status-summary" id="summary">
+        <div class="summary-left">
+            <h2>Checking system health...</h2>
+            <p>Pulling data from all endpoints.</p>
+        </div>
+
+        <div class="summary-badge">Loading</div>
+    </div>
+
+    <div class="status-grid" id="grid"></div>
+
+    <section class="incidents">
+        <h2>Recent Incidents</h2>
+        <div id="incidentContainer">
+            <p style="color:var(--muted)">No incidents reported.</p>
+        </div>
+    </section>
+
+    <p style="text-align:center;color:var(--muted);margin-bottom:60px">
+        Last checked: <span id="checked">--</span>
+    </p>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>Core<span>Forge</span></h3>
+                <p>Next-generation automation built for performance, design, and precision.</p>
+            </div>
+
+            <div class="footer-links">
+                <div>
+                    <h4>Product</h4>
+                    <a href="#partners">Partners</a>
+                    <a href="index.html#systems">Systems</a>
+                    <a href="index.html#vision">Framework</a>
+                    <a href="https://discord.gg/coreforge">Support</a>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Developers</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="tos.html">Terms of Service</a>
+                </div>
+                <div>
+                    <h4>Connect</h4>
+                    <a href="https://discord.gg/coreforge">Discord</a>
+                    <a href="#">GitHub</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 CoreForge. All rights reserved.</p>
+            <p>Engineered with precision by
+                <a href="https://solvexs.xyz" target="_blank" class="link">Solvex Studios</a>
+                owner
+                <a href="https://discord.gg/FpXhZxRj" target="_blank" class="link">YK.JEREME</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const services = [
+            { name: "CoreForge Website", url: "https://coreforge.xyz" },
+            { name: "CoreForge Auth", url: " https://cloudflare.com/" },
+            { name: "CoreForge Shop", url: "https://tebex.io/" }
+        ];
+
+        const grid = document.getElementById("grid");
+        const summary = document.getElementById("summary");
+        const badge = summary.querySelector(".summary-badge");
+        const title = summary.querySelector("h2");
+        const sub = summary.querySelector("p");
+        const incidents = document.getElementById("incidentContainer");
+        const checked = document.getElementById("checked");
+
+        function makeCard(svc) {
+            const div = document.createElement("div");
+            div.className = "status-card";
+
+            div.innerHTML = `
+                <div class="status-header">
+                    <div class="status-name">${svc.name}</div>
+                    <div class="status-indicator">
+                        <div class="dot"></div>
+                        <span>Checking...</span>
+                    </div>
+                </div>
+
+                <div class="ping">Ping: --</div>
+
+                <div class="uptime-bar">
+                    <div class="uptime-fill"></div>
+                </div>
+            `;
+
+            grid.appendChild(div);
+            return div;
+        }
+
+        const cards = services.map(makeCard);
+
+        async function checkService(url) {
+            const start = performance.now();
+            try {
+                const controller = new AbortController();
+                setTimeout(() => controller.abort(), 6000);
+
+                await fetch(url, { mode: "no-cors", signal: controller.signal });
+
+                return {
+                    ok: true,
+                    ms: Math.round(performance.now() - start)
+                };
+
+            } catch {
+                return {
+                    ok: false,
+                    ms: Math.round(performance.now() - start)
+                };
+            }
+        }
+
+        async function update() {
+            checked.textContent = new Date().toLocaleString();
+
+            let down = 0;
+
+            for (let i = 0; i < services.length; i++) {
+                const svc = services[i];
+                const card = cards[i];
+
+                const ind = card.querySelector(".status-indicator");
+                const dot = ind.querySelector(".dot");
+                const text = ind.querySelector("span");
+                const ping = card.querySelector(".ping");
+                const bar = card.querySelector(".uptime-fill");
+
+                const { ok, ms } = await checkService(svc.url);
+
+                ping.textContent = `Ping: ${ms} ms`;
+
+                if (!ok || ms > 3000) {
+                    dot.style.background = "#ef4444";
+                    text.textContent = "Down";
+                    bar.style.transform = "scaleX(0.4)";
+                    down++;
+                } else if (ms > 1200) {
+                    dot.style.background = "#facc15";
+                    text.textContent = "Slow";
+                    bar.style.transform = "scaleX(0.7)";
+                } else {
+                    dot.style.background = "#22c55e";
+                    text.textContent = "Operational";
+                    bar.style.transform = "scaleX(1)";
+                }
+            }
+
+            if (down === 0) {
+                title.textContent = "All Systems Operational";
+                sub.textContent = "Every CoreForge system is online.";
+                badge.textContent = "Operational";
+                badge.className = "summary-badge up";
+            } else {
+                title.textContent = `${down} System${down !== 1 ? "s" : ""} Down`;
+                sub.textContent = "Some systems are experiencing issues.";
+                badge.textContent = "Degraded";
+                badge.className = "summary-badge down";
+            }
+        }
+
+        update();
+        setInterval(update, 4000);
+
+        const navbar = document.querySelector(".navbar");
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 50) navbar.classList.add("scrolled");
+            else navbar.classList.remove("scrolled");
+        });
+    </script>
+
+</body>
+
+</html>

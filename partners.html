@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoreForge — Contact & Support</title>
+    <title>CoreForge — Partners</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -136,37 +136,104 @@
             gap: 36px;
         }
 
-        .contact-card {
-            background: var(--card);
+        .partner-card {
+            background: linear-gradient(180deg, #161616 0%, #0d0d0d 100%);
             border: 1px solid var(--border);
-            padding: 34px;
-            border-radius: var(--radius);
+            padding: 38px 34px 40px;
+            border-radius: 18px;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .partner-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent1);
+            opacity: 0.85;
+        }
+
+        .partner-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, .22);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+        }
+
+        .partner-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .partner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .partner-name {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+        .partner-type {
+            padding: 5px 14px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            border-radius: 999px;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid var(--accent1);
+            color: var(--accent1);
+        }
+
+        .partner-desc {
+            margin-top: 8px;
+            margin-bottom: 22px;
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 0.96rem;
+        }
+
+        .partner-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .partner-link {
+            padding: 10px 18px;
+            border-radius: 14px;
+            font-size: 0.83rem;
+            border: 1px solid var(--accent1);
+            color: var(--accent1);
+            background: rgba(255, 255, 255, 0.02);
+            font-weight: 500;
             transition: var(--transition);
         }
 
-        .contact-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(255, 255, 255, .18);
-        }
-
-        .contact-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-        }
-
-        .contact-card p {
-            color: var(--muted);
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-
-        .contact-card a {
-            color: var(--accent);
-            font-weight: 600;
+        .partner-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
         }
 
         footer {
-            background: var(--);
+            background: #050505;
             border-top: 1px solid var(--border);
             color: var(--muted);
             padding: 80px 8% 40px;
@@ -255,77 +322,15 @@
             border-bottom-color: rgba(255, 255, 255, 0.4);
         }
 
-        .popup-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            animation: fadeIn 0.4s ease forwards;
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .9s ease, transform .9s ease
         }
 
-        .popup {
-            background: #141414;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 40px 36px;
-            text-align: center;
-            max-width: 420px;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.4);
-            animation: scaleIn 0.3s ease forwards;
-        }
-
-        .popup h2 {
-            font-size: 1.6rem;
-            margin-bottom: 14px;
-        }
-
-        .popup p {
-            color: #9ca3af;
-            line-height: 1.6;
-            font-size: 1rem;
-            margin-bottom: 28px;
-        }
-
-        .popup button {
-            background: #fff;
-            color: #000;
-            font-weight: 600;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .popup button:hover {
-            background: #e5e5e5;
-            transform: translateY(-1px);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.95);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        .visible {
+            opacity: 1;
+            transform: translateY(0)
         }
 
         @media(max-width:700px) {
@@ -343,20 +348,7 @@
                 flex-direction: column;
                 text-align: center;
             }
-        }
 
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity .9s ease, transform .9s ease
-        }
-
-        .visible {
-            opacity: 1;
-            transform: translateY(0)
-        }
-
-        @media(max-width:700px) {
             .hero h1 {
                 font-size: 2.6rem;
             }
@@ -374,51 +366,18 @@
         <div class="logo">Core<span>Forge</span></div>
         <nav>
             <a href="index.html">Home</a>
-            <a href="#support">Support</a>
+            <a href="#partners">Partners</a>
         </nav>
         <a href="https://discord.com/invite/coreforge" class="cta">Add to Discord</a>
     </header>
 
     <section class="hero">
-        <h1>Contact & Support</h1>
-        <p>We're here to help you with CoreForge. Reach out to the right department below, and our team will respond as
-            soon as possible.</p>
+        <h1>CoreForge Partners</h1>
+        <p>Trusted projects, services, and communities collaborating with CoreForge to push automation further.</p>
     </section>
 
-    <section class="contact-section" id="support">
-        <div class="grid">
-
-            <div class="contact-card">
-                <h3>⚙️ Bot Support</h3>
-                <p>Technical help, errors, configuration, or general CoreForge support.</p>
-                <a href="mailto:support@coreforge.dev">Email: support@coreforge.dev</a>
-            </div>
-
-            <div class="contact-card">
-                <h3>💳 Billing Support</h3>
-                <p>Purchases, subscriptions, invoices, refunds, and billing concerns.</p>
-                <a href="mailto:store@coreforge.dev">Email: store@coreforge.dev</a>
-            </div>
-
-            <div class="contact-card">
-                <h3>🧪 Zombie Clanx</h3>
-                <p>Direct contact for the Zombie Clanx dev relations & support.</p>
-                <a href="mailto:zombie.clanx@coreforge.dev">Email: zombie.clanx@coreforge.dev</a>
-            </div>
-
-            <div class="contact-card">
-                <h3>💬 Discord Community</h3>
-                <p>Live support, announcements, updates, and community help.</p>
-                <a href="https://discord.gg/coreforge" target="_blank">Join Discord Server</a>
-            </div>
-
-            <div class="contact-card">
-                <h3>✨ Jereme - Web Developer</h3>
-                <p>Hello im the developer of this website. Contact me below.</p>
-                <a href="https://discord.com/users/977438421515644948" target="_blank">Contact Me</a>
-            </div>
-
-        </div>
+    <section class="contact-section" id="partners">
+        <div id="partner-grid" class="grid"></div>
     </section>
 
     <footer>
@@ -431,9 +390,9 @@
             <div class="footer-links">
                 <div>
                     <h4>Product</h4>
-                    <a href="#systems">Systems</a>
-                    <a href="#stats">Analytics</a>
-                    <a href="#vision">Framework</a>
+                    <a href="#partners">Partners</a>
+                    <a href="index.html#systems">Systems</a>
+                    <a href="index.html#vision">Framework</a>
                     <a href="https://discord.gg/coreforge">Support</a>
                 </div>
                 <div>
@@ -460,7 +419,6 @@
                 owner
                 <a href="https://discord.gg/FpXhZxRj" target="_blank" class="link">YK.JEREME</a>
             </p>
-
         </div>
     </footer>
 
@@ -471,8 +429,69 @@
             navbar.style.background = window.scrollY > 50 ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.6)';
         });
 
-        document.getElementById("closePopup").addEventListener("click", () => {
-            document.getElementById("devPopup").style.display = "none";
+        const partners = [
+            {
+                name: "Solvex Studios",
+                icon: "⚙️",
+                type: "Partner",
+                accent: "#35d8ff",
+                desc: "A premier development studio specializing in custom Discord bots and automation solutions.",
+                links: [
+                    { name: "Website", url: "https://solvexs.xyz" },
+                    { name: "Discord", url: "https://discord.gg/https://discord.gg/RNAqGFEFWe" }
+                ]
+            },
+            {
+                name: "Needs Filling",
+                icon: "⭐",
+                type: "Sponsor",
+                desc: "Apply to become an official CoreForge partner or sponsor and collaborate with our automation ecosystem.",
+                links: [
+                    { name: "Apply", url: "https://discord.gg/coreforge" }
+                ]
+            },
+            {
+                name: "Needs Filling",
+                icon: "📌",
+                type: "N/A",
+                desc: "Apply to become an official CoreForge partner or sponsor and collaborate with our automation ecosystem.",
+                links: [
+                    { name: "Apply", url: "https://discord.gg/coreforge" }
+                ]
+            }
+        ];
+
+
+        const typeColors = {
+            "N/A": ["#ef4444", "#b91c1c"],
+            Partner: ["#3aa0ff", "#08b5ea"],
+            Sponsor: ["#f4c542", "#d1a123"],
+        };
+
+        const grid = document.getElementById("partner-grid");
+
+        partners.forEach(p => {
+            const defaultColors = typeColors[p.type] || ["#e5e7eb", "#9ca3af"];
+            const accentColor = p.accent || defaultColors[0];
+
+            const card = document.createElement("div");
+            card.className = "partner-card";
+            card.style.setProperty("--accent1", accentColor);
+
+            card.innerHTML = `
+        <div class="partner-header">
+            <div class="partner-name">${p.name}</div>
+            <div class="partner-type">${p.type}</div>
+        </div>
+        <p class="partner-desc">${p.desc}</p>
+        <div class="partner-links">
+            ${p.links
+                    .map(l => `<a href="${l.url}" target="_blank" class="partner-link">${l.name}</a>`)
+                    .join("")}
+        </div>
+    `;
+
+            grid.appendChild(card);
         });
     </script>
 
