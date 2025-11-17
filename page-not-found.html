@@ -1,1 +1,102 @@
-.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoreForge — Transcript</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b0b;
+  --surface:#111;
+  --border:rgba(255,255,255,0.08);
+  --text:#f5f5f5;
+  --muted:#9ca3af;
+  --accent:#ffffff;
+  --radius:12px;
+  --transition:all .3s ease;
+  font-family:"Inter",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:radial-gradient(900px at 80% 0%,#181818 0%,#050505 70%);
+  color:var(--text);
+  min-height:100vh;
+}
+a{text-decoration:none;color:inherit;transition:var(--transition)}
+a:hover{color:var(--accent)}
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:60px;
+  background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;border-bottom:1px solid var(--border);z-index:10;
+}
+.logo{font-weight:800;font-size:1.4rem}
+.logo span{color:var(--muted)}
+.navbar .nav-links{display:flex;gap:18px;font-size:.9rem;color:var(--muted)}
+.navbar .nav-links a:hover{color:var(--accent)}
+.main{
+  max-width:900px;
+  margin:100px auto 60px;
+  padding:40px 24px;
+}
+.card{
+  background:var(--surface);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  padding:32px 28px 40px;
+}
+h1{
+  font-size:2.3rem;
+  margin-bottom:8px;
+}
+.lead{
+  color:var(--muted);
+  margin-bottom:28px;
+  line-height:1.7;
+}
+h2{
+  font-size:1.25rem;
+  margin:28px 0 10px;
+}
+p{
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:14px;
+  font-size:.98rem;
+}
+ul{
+  margin-left:20px;
+  margin-bottom:16px;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:.98rem;
+}
+li{margin-bottom:6px}
+.footer-text{
+  margin-top:26px;
+  font-size:.85rem;
+  color:var(--muted);
+}
+@media(max-width:700px){
+  .main{padding:30px 18px;margin-top:90px}
+  h1{font-size:1.9rem}
+}
+</style>
+</head>
+<body>
+<header class="navbar">
+  <div class="logo">Core<span>Forge</span></div>
+  <div class="nav-links">
+ </div>
+</header>
+
+<main class="main">
+  <section class="card">
+   <h1>Page not Found</h1>
+   <p>Sorry the page you were looking for could not be found.</p>
+    
+  </section>
+</main>
+</body>
+</html>
