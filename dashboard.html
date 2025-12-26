@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proxmox VE Dashboard</title>
+  <style>
+    :root {
+      --primary: #0078d4;
+      --primary-dark: #005a9e;
+      --bg-dark: #0f1419;
+      --bg-card: #1a1f24;
+      --text: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --border: #333;
+      --accent: #00aaff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #0a0e12;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      padding: 0.8rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      color: white;
+      border-bottom: 3px solid var(--primary);
+      background: rgba(0, 120, 212, 0.1);
+    }
+
+    .tab:hover {
+      color: white;
+      background: rgba(255,255,255,0.05);
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .connected { background: #00cc66; }
+    .disconnected { background: #ff4d4d; }
+
+    iframe {
+      width: 100%;
+      height: 80vh;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Proxmox VE Dashboard</h1>
+    <div>
+      <span class="status-indicator connected"></span>
+      Connected to <strong>http://192.168.1.176:8006</strong>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="settings">Settings</button>
+    <button class="tab" data-tab="customization">Customization</button>
+    <button class="tab" data-tab="premium">Premium</button>
+  </div>
+
+  <main>
+
+    <!-- Dashboard Tab (Embedded Proxmox VE) -->
+    <div id="dashboard" class="tab-content active">
+      <div class="card">
+        <h2>Proxmox VE Web Interface</h2>
+        <p>Direct access to your Proxmox VE server at <strong>http://192.168.1.176:8006</strong></p>
+        
+        <!-- Embedded Proxmox VE -->
+        <iframe 
+          src="http://192.168.1.176:8006/"
+          title="Proxmox VE Web Interface"
+          id="proxmox-iframe"
+          allowfullscreen
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
+        ></iframe>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div id="settings" class="tab-content">
+      <div class="card">
+        <h2>Connection Settings</h2>
+        <div class="form-group">
+          <label for="proxmox-url">Proxmox VE URL</label>
+          <input type="text" id="proxmox-url" value="http://192.168.1.176:8006" />
+        </div>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="root@pam" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter password" />
+        </div>
+        <button id="save-connection">Save & Reload</button>
+      </div>
+    </div>
+
+    <!-- Customization Tab -->
+    <div id="customization" class="tab-content">
+      <div class="card">
+        <h2>Appearance</h2>
+        <div class="form-group">
+          <label for="theme">Theme</label>
+          <select id="theme">
+            <option value="dark">Dark (Default)</option>
+            <option value="light">Light</option>
+          </select>
+        </div>
+        <button>Apply Changes</button>
+      </div>
+    </div>
+
+    <!-- Premium Tab -->
+    <div id="premium" class="tab-content">
+      <div class="card">
+        <h2>Premium Features</h2>
+        <p>Upgrade to unlock:</p>
+        <ul>
+          <li>API monitoring & alerts</li>
+          <li>Resource graphs & analytics</li>
+          <li>Multi-node cluster management</li>
+          <li>Backup scheduler</li>
+        </ul>
+        <button style="background: #00cc66; padding: 1rem 2rem;">Upgrade Now</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    © 2025 Proxmox VE Dashboard • Connected to 192.168.1.176:8006
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    // Optional: Reload iframe when saving new URL
+    document.getElementById('save-connection')?.addEventListener('click', () => {
+      const newUrl = document.getElementById('proxmox-url').value.trim();
+      if (newUrl && newUrl.startsWith('http')) {
+        document.getElementById('proxmox-iframe').src = newUrl;
+      } else {
+        alert('Please enter a valid URL');
+      }
+    });
+  </script>
+</body>
+</html>
